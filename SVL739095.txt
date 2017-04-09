@@ -1,0 +1,4 @@
+Apr 9, 2017 12:33:36 AM: SV Account savings 739095 opened.
+Apr 9, 2017 12:33:45 AM: Charge of $25.00 for test posted.
+Apr 9, 2017 12:33:50 AM: Deposit of $10.00 posted.
+Apr 9, 2017 12:34:05 AM: Interest earned = $1.85 for month at annual rate of: 12%

@@ -10,12 +10,23 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -137,15 +148,14 @@ public class AccountsView extends FrameView {
         jLabel4 = new javax.swing.JLabel();
         jtxtRate = new javax.swing.JTextField();
         jbtnIntTrans = new javax.swing.JButton();
-        jbtnLog = new javax.swing.JButton();
+        jbtnDisplayHistory = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         jmnuAsset = new javax.swing.JMenu();
         jmnuCK = new javax.swing.JMenuItem();
         jmnuSV = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jmnuOpenExisting = new javax.swing.JMenuItem();
+        jMenuOpenExisting = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -329,8 +339,13 @@ public class AccountsView extends FrameView {
             }
         });
 
-        jbtnLog.setText(resourceMap.getString("jbtnLog.text")); // NOI18N
-        jbtnLog.setName("jbtnLog"); // NOI18N
+        jbtnDisplayHistory.setText(resourceMap.getString("jbtnDisplayHistory.text")); // NOI18N
+        jbtnDisplayHistory.setName("jbtnDisplayHistory"); // NOI18N
+        jbtnDisplayHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnDisplayHistoryActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -362,7 +377,7 @@ public class AccountsView extends FrameView {
                             .addComponent(jbtnIntTrans))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbtnLog)
+                            .addComponent(jbtnDisplayHistory)
                             .addComponent(jbtnChg))))
                 .addContainerGap(65, Short.MAX_VALUE))
         );
@@ -386,7 +401,7 @@ public class AccountsView extends FrameView {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtxtRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbtnIntTrans)
-                    .addComponent(jbtnLog))
+                    .addComponent(jbtnDisplayHistory))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -474,24 +489,14 @@ public class AccountsView extends FrameView {
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         fileMenu.add(exitMenuItem);
 
-        jMenuItem1.setText(resourceMap.getString("jMenuItem1.text")); // NOI18N
-        jMenuItem1.setName("jMenuItem1"); // NOI18N
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuOpenExisting.setText(resourceMap.getString("jMenuOpenExisting.text")); // NOI18N
+        jMenuOpenExisting.setName("jMenuOpenExisting"); // NOI18N
+        jMenuOpenExisting.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jMenuOpenExistingActionPerformed(evt);
             }
         });
-        fileMenu.add(jMenuItem1);
-
-        jmnuOpenExisting.setText(resourceMap.getString("jmnuOpenExisting.text")); // NOI18N
-        jmnuOpenExisting.setToolTipText(resourceMap.getString("jmnuOpenExisting.toolTipText")); // NOI18N
-        jmnuOpenExisting.setName("jmnuOpenExisting"); // NOI18N
-        jmnuOpenExisting.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmnuOpenExistingActionPerformed(evt);
-            }
-        });
-        fileMenu.add(jmnuOpenExisting);
+        fileMenu.add(jMenuOpenExisting);
 
         menuBar.add(fileMenu);
 
@@ -608,10 +613,13 @@ public class AccountsView extends FrameView {
     }//GEN-LAST:event_jbtnCreateActionPerformed
 
     private void jbtnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelActionPerformed
-        setInputLine(false);
+
+        // setInputLine(false);
+
     }//GEN-LAST:event_jbtnCancelActionPerformed
 
     private void jbtnChgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnChgActionPerformed
+
         statusMessageLabel.setText("");
         double amt;
         NumberFormat curr = NumberFormat.getCurrencyInstance();
@@ -630,6 +638,8 @@ public class AccountsView extends FrameView {
             statusMessageLabel.setText("Non numeric charge amount");
         }
         jtxtChgAmt.requestFocusInWindow();
+
+
     }//GEN-LAST:event_jbtnChgActionPerformed
 
     private void jbtnPmtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnPmtActionPerformed
@@ -673,22 +683,69 @@ public class AccountsView extends FrameView {
         jtxtRate.requestFocusInWindow();
     }//GEN-LAST:event_jbtnIntTransActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void jbtnDisplayHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnDisplayHistoryActionPerformed
 
-        setInputLine(true);
-        jtxtTypeCd.setText(Checking.TYPECD);
-        jtxtAcctNm.setText("");
-        jlblStartVal.setText("Initial Deposit");
-        jtxtStartVal.setText("");
-        jtxtStartVal.setEnabled(true);
-        jtxtAcctNm.requestFocusInWindow();
+        statusMessageLabel.setText("display history");
 
+    }//GEN-LAST:event_jbtnDisplayHistoryActionPerformed
 
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void jMenuOpenExistingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenExistingActionPerformed
 
-    private void jmnuOpenExistingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmnuOpenExistingActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jmnuOpenExistingActionPerformed
+        statusMessageLabel.setText("open existing test");
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Text Files", "txt");
+        chooser.setFileFilter(filter);
+        File file = chooser.getSelectedFile();
+
+        int returnVal = chooser.showOpenDialog(this.jPanel1);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: "
+                    + chooser.getSelectedFile().getName());
+        }
+
+        ArrayList<String> list = new ArrayList<>();
+        //      Scanner s;
+        try {
+            Scanner s;
+            s = new Scanner(new File("C:\\Users\\Keith\\Documents\\NetBeansProjects\\Accounts_starter_inClass\\" + chooser.getSelectedFile().getName()));
+            while (s.hasNext()) {
+                list.add(s.next());
+            }
+            s.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AccountsView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println("list " + list.get(i));
+        }
+
+        /*    try {
+            FileInputStream fstream = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            String strLine;
+            int lineNumber = 0;
+            String[] accountInfo = null;
+            // Read File Line By Line
+            while ((strLine = br.readLine()) != null) {
+                lineNumber++;
+                accountInfo = getStringArray(strLine);
+                
+            }
+            // Close the input stream
+            in.close();
+            //print the contents of a
+            for (int i = 0; i < a.length; i++) {
+                System.out.println("a[" + i + "] = " + a[i]);
+            }
+        } catch (Exception e) {// Catch exception if any
+            System.err.println("Error: " + e.getMessage());
+        } */
+
+    }//GEN-LAST:event_jMenuOpenExistingActionPerformed
 
     private void setInputLine(boolean tf) {
         jlblTypeCd.setVisible(tf);
@@ -707,14 +764,14 @@ public class AccountsView extends FrameView {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuOpenExisting;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton jbtnCancel;
     private javax.swing.JButton jbtnChg;
     private javax.swing.JButton jbtnCreate;
+    private javax.swing.JButton jbtnDisplayHistory;
     private javax.swing.JButton jbtnIntTrans;
-    private javax.swing.JButton jbtnLog;
     private javax.swing.JButton jbtnPmt;
     private javax.swing.JLabel jlblAcctNm;
     private javax.swing.JLabel jlblStartVal;
@@ -725,7 +782,6 @@ public class AccountsView extends FrameView {
     private javax.swing.JLabel jlblTypeCd;
     private javax.swing.JMenu jmnuAsset;
     private javax.swing.JMenuItem jmnuCK;
-    private javax.swing.JMenuItem jmnuOpenExisting;
     private javax.swing.JMenuItem jmnuSV;
     private javax.swing.JTextField jtxtAcctNm;
     private javax.swing.JTextField jtxtAcctNo;

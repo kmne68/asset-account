@@ -1,0 +1,2 @@
+Apr 9, 2017 9:12:16 PM: CK Account test 474562 opened.
+Apr 9, 2017 9:12:26 PM: Charge of $20.00 for test posted.

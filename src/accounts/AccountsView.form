@@ -293,7 +293,7 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jbtnLog" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jbtnDisplayHistory" min="-2" max="-2" attributes="0"/>
                                   <Component id="jbtnChg" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -324,7 +324,7 @@
                           <Component id="jLabel4" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                           <Component id="jtxtRate" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jbtnIntTrans" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jbtnLog" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jbtnDisplayHistory" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="21" max="32767" attributes="0"/>
                   </Group>
@@ -412,11 +412,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnIntTransActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jbtnLog">
+            <Component class="javax.swing.JButton" name="jbtnDisplayHistory">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jbtnLog.text"/>
-                <Property name="name" type="java.lang.String" value="jbtnLog" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="jbtnDisplayHistory.text"/>
+                <Property name="name" type="java.lang.String" value="jbtnDisplayHistory" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnDisplayHistoryActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -479,23 +482,13 @@
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
               </AuxValues>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuOpenExisting">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jMenuItem1.text"/>
-                <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="jMenuOpenExisting.text"/>
+                <Property name="name" type="java.lang.String" value="jMenuOpenExisting" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jmnuOpenExisting">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jmnuOpenExisting.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="jmnuOpenExisting.toolTipText"/>
-                <Property name="name" type="java.lang.String" value="jmnuOpenExisting" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmnuOpenExistingActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuOpenExistingActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

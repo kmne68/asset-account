@@ -91,7 +91,7 @@ abstract public class AssetAccount implements Account {
             DateFormat df = DateFormat.getDateTimeInstance();
             String ts = df.format(cal.getTime());
             PrintWriter out = new PrintWriter(
-                    new FileWriter(Savings.TYPECD + "L"
+                    new FileWriter(this.getTypeCd() + "L"
                             + this.AcctNo + ".txt", true));
             out.println(ts + ": " + msg);
             out.close();

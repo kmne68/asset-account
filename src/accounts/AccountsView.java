@@ -694,11 +694,10 @@ public class AccountsView extends FrameView {
         statusMessageLabel.setText("open existing test");
 
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Text Files", "txt");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         chooser.setFileFilter(filter);
         File file = chooser.getSelectedFile();
-
+  //      String fileName = file.getName(); //chooser.getSelectedFile().getName();
         int returnVal = chooser.showOpenDialog(this.jPanel1);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             System.out.println("You chose to open this file: "
@@ -706,7 +705,53 @@ public class AccountsView extends FrameView {
         }
 
         ArrayList<String> list = new ArrayList<>();
-        //      Scanner s;
+        ArrayList<String> logList = new ArrayList<>();
+        String name = chooser.getSelectedFile().getName();
+        String code = name.substring(0, 2);
+        String accountNumber = "";
+        String accountName = "";
+        String endBalanceName = ""; // name of file with ending balance
+        System.out.println("name" + name);
+
+        // grab the account number
+        if (name.substring(3, 4).equals("L")) {
+            accountNumber = name.substring(4, 10);
+            StringBuilder sb = new StringBuilder(name);
+            sb.deleteCharAt(3);
+            
+            endBalanceName = sb.toString();
+            
+       //     String endBalanceName = name.replace("L", "");
+            try {
+                Scanner endScan = new Scanner(new File("C:\\Users\\Keith\\Documents\\NetBeansProjects\\Accounts_starter_inClass\\" + endBalanceName));
+                while (endScan.hasNextLine()) {
+                    logList.add(endScan.nextLine());
+                }
+                endScan.close();
+                accountName = logList.get(0);
+                
+            } catch (FileNotFoundException ex) {
+
+            }
+
+        } else {
+            accountNumber = name.substring(3, 9);
+        }
+
+        // instantiate the proper account type based on extracted typecode
+        if (code.equals("CK")) {
+            account = new Checking(name, 0.0);
+        } else {
+            account = new Savings(name, 0.0);
+        }
+
+        jtxtAcctTypeCd.setText(code);
+        jtxtAcctNo.setText(accountNumber);
+        jtxtDisplayName.setText(accountName);
+        System.out.println("Code = " + code);
+        System.out.println("Number = " + accountNumber);
+        System.out.println("Name = " + endBalanceName);
+
         try {
             Scanner s;
             s = new Scanner(new File("C:\\Users\\Keith\\Documents\\NetBeansProjects\\Accounts_starter_inClass\\" + chooser.getSelectedFile().getName()));
@@ -720,10 +765,10 @@ public class AccountsView extends FrameView {
         }
 
         for (int i = 0; i < list.size(); i++) {
-            System.out.println("list " + list.get(i));
+            System.out.println(i + " " + list.get(i));
         }
 
-        /*    try {
+        /*      try {
             FileInputStream fstream = new FileInputStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
             String strLine;
@@ -732,9 +777,9 @@ public class AccountsView extends FrameView {
             // Read File Line By Line
             while ((strLine = br.readLine()) != null) {
                 lineNumber++;
-                accountInfo = getStringArray(strLine);
-                
-            }
+                list = getStringArray(strLine);
+               
+            } 
             // Close the input stream
             in.close();
             //print the contents of a

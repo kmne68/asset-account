@@ -762,9 +762,9 @@ public class AccountsView extends FrameView {
 
         // instantiate the proper account type based on extracted typecode
         if (code.equals("CK")) {
-            account = new Checking(fileName, 0.0);
+            account = new Checking(accountNumber, Double.parseDouble(balance));
         } else {
-            account = new Savings(fileName, 0.0);
+            account = new Savings(accountNumber, Double.parseDouble(balance));
         }
 
         System.out.println("loglist[0] = " + logList.get(0));

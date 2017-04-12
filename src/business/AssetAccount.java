@@ -28,8 +28,9 @@ abstract public class AssetAccount implements Account {
     private String nm;
     NumberFormat c = NumberFormat.getCurrencyInstance();
 
-    public AssetAccount(int accountNumber) {
-
+    public AssetAccount(int accountNumber, double balance) {
+        this.AcctNo = accountNumber;
+        this.balance = balance;
     }
 
     public AssetAccount(String code, String name, double balance) {
@@ -73,7 +74,7 @@ abstract public class AssetAccount implements Account {
     private void writestatus() {
         try {
             PrintWriter out = new PrintWriter(
-                    new FileWriter(Savings.TYPECD + this.AcctNo + ".txt"));
+                    new FileWriter(this.typeCode + this.AcctNo + ".txt"));
             out.println(this.nm);
             out.println(this.balance);
             out.close();

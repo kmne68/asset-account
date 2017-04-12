@@ -697,7 +697,7 @@ public class AccountsView extends FrameView {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         chooser.setFileFilter(filter);
         File file = chooser.getSelectedFile();
-  //      String fileName = file.getName(); //chooser.getSelectedFile().getName();
+        //      String fileName = file.getName(); //chooser.getSelectedFile().getName();
         int returnVal = chooser.showOpenDialog(this.jPanel1);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             System.out.println("You chose to open this file: "
@@ -706,51 +706,79 @@ public class AccountsView extends FrameView {
 
         ArrayList<String> list = new ArrayList<>();
         ArrayList<String> logList = new ArrayList<>();
-        String name = chooser.getSelectedFile().getName();
-        String code = name.substring(0, 2);
+        String fileName = chooser.getSelectedFile().getName();
+        String code = fileName.substring(0, 2);
         String accountNumber = "";
         String accountName = "";
-        String endBalanceName = ""; // name of file with ending balance
-        System.out.println("name" + name);
+        String endBalanceName = ""; // fileName of file with ending balance
+        System.out.println("filename" + fileName);
+        String scanFile = "";
+        String balance = "";
 
+        //   endBalanceName = fileName.replace("L", "");
         // grab the account number
-        if (name.substring(3, 4).equals("L")) {
-            accountNumber = name.substring(4, 10);
-            StringBuilder sb = new StringBuilder(name);
-            sb.deleteCharAt(3);
-            
-            endBalanceName = sb.toString();
-            
-       //     String endBalanceName = name.replace("L", "");
+        if (fileName.substring(2, 3).equals("L")) {
+            accountNumber = fileName.replaceAll("\\D", "");
+
+            //   sb.deleteCharAt(3);
+            //   endBalanceName = sb.toString();
+            //       System.out.println("end balance name " + endBalanceName);
+            endBalanceName = fileName.replace("L", "");
+            Scanner endScan;
+            scanFile = "C:\\Users\\Keith\\Documents\\NetBeansProjects\\Accounts_starter_inClass\\" + endBalanceName;
+                
             try {
-                Scanner endScan = new Scanner(new File("C:\\Users\\Keith\\Documents\\NetBeansProjects\\Accounts_starter_inClass\\" + endBalanceName));
+                endScan = new Scanner(new File(scanFile));
+                while (endScan.hasNext()) {
+                    logList.add(endScan.next());
+                }
+                endScan.close();                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(AccountsView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                for (int i = 0; i < logList.size(); i++) {
+                    System.out.println(i + " " + logList.get(i));
+            }
+
+       //     
+        } else {
+            accountNumber = fileName.replaceAll("\\D", "");
+            endBalanceName = fileName;
+            try {
+                Scanner endScan;
+                scanFile = "C:\\Users\\Keith\\Documents\\NetBeansProjects\\Accounts_starter_inClass\\" + endBalanceName;
+                endScan = new Scanner(new File(scanFile));
                 while (endScan.hasNextLine()) {
                     logList.add(endScan.nextLine());
                 }
-                endScan.close();
                 accountName = logList.get(0);
+                balance = logList.get(1);
+                endScan.close();              
                 
             } catch (FileNotFoundException ex) {
-
+                Logger.getLogger(AccountsView.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } else {
-            accountNumber = name.substring(3, 9);
         }
 
         // instantiate the proper account type based on extracted typecode
         if (code.equals("CK")) {
-            account = new Checking(name, 0.0);
+            account = new Checking(fileName, 0.0);
         } else {
-            account = new Savings(name, 0.0);
+            account = new Savings(fileName, 0.0);
         }
 
+        System.out.println("loglist[0] = " + logList.get(0));
+        
         jtxtAcctTypeCd.setText(code);
         jtxtAcctNo.setText(accountNumber);
         jtxtDisplayName.setText(accountName);
+        jtxtBalance.setText(balance);
+
         System.out.println("Code = " + code);
         System.out.println("Number = " + accountNumber);
         System.out.println("Name = " + endBalanceName);
+        System.out.println("AccountName = " + accountName);
+        System.out.println("Scanfile name = " + scanFile);
 
         try {
             Scanner s;

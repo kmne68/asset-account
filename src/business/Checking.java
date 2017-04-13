@@ -9,10 +9,12 @@ public class Checking extends AssetAccount {
     public static final String TYPECD = "CK";
     public static final String TYPEDESC = "Checking Account";
 
+    public Checking(int acctno) {
+        super(Checking.TYPECD, acctno);
+    }
     
     public Checking(String nm, double sbal){
-        super(Checking.TYPECD, nm, sbal);
-        
+        super(Checking.TYPECD, nm, sbal);        
     }    
     
     @Override

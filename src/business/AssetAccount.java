@@ -27,6 +27,12 @@ abstract public class AssetAccount implements Account {
     private String typeCode;
     private String nm;
     NumberFormat c = NumberFormat.getCurrencyInstance();
+    
+    // in class constructor
+    public AssetAccount(String typecd, int acctno) {
+        // constructor for known account number
+        // card.java has code for a constructor that takes an integer acct number
+    }
 
     public AssetAccount(int accountNumber, double balance) {
         this.AcctNo = accountNumber;
@@ -221,8 +227,16 @@ abstract public class AssetAccount implements Account {
     }
 
     @Override
-    public ArrayList<String> getLog() {
-        ArrayList<String> h = new ArrayList<>();
+    public ArrayList<String> getLog() {        
+        
+        ArrayList<String> h = new ArrayList<>();        
+        
+        h.add("log entry 1");
+        h.add("log entry 2");
+        h.add("log entry 3");
+        
+        return h;
+    /*    ArrayList<String> h = new ArrayList<>();
         errmsg = "";
         actmsg = "";
         String t;
@@ -246,8 +260,7 @@ abstract public class AssetAccount implements Account {
         } catch (Exception e) {
             errmsg = "Error reading log file: " + e.getMessage();
         }
-        return h;
-
+        return h; */
     }
 
     @Override

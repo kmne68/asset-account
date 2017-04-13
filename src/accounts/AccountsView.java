@@ -27,6 +27,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -154,8 +156,8 @@ public class AccountsView extends FrameView {
         jmnuAsset = new javax.swing.JMenu();
         jmnuCK = new javax.swing.JMenuItem();
         jmnuSV = new javax.swing.JMenuItem();
-        javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         jMenuOpenExisting = new javax.swing.JMenuItem();
+        javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -484,11 +486,6 @@ public class AccountsView extends FrameView {
 
         fileMenu.add(jmnuAsset);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(accounts.AccountsApp.class).getContext().getActionMap(AccountsView.class, this);
-        exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
-        exitMenuItem.setName("exitMenuItem"); // NOI18N
-        fileMenu.add(exitMenuItem);
-
         jMenuOpenExisting.setText(resourceMap.getString("jMenuOpenExisting.text")); // NOI18N
         jMenuOpenExisting.setName("jMenuOpenExisting"); // NOI18N
         jMenuOpenExisting.addActionListener(new java.awt.event.ActionListener() {
@@ -497,6 +494,11 @@ public class AccountsView extends FrameView {
             }
         });
         fileMenu.add(jMenuOpenExisting);
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(accounts.AccountsApp.class).getContext().getActionMap(AccountsView.class, this);
+        exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
+        exitMenuItem.setName("exitMenuItem"); // NOI18N
+        fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
 
@@ -602,6 +604,8 @@ public class AccountsView extends FrameView {
                 statusMessageLabel.setText("unknown account type");
                 break;
         }
+        
+        // call to display values
         jtxtDisplayName.setText(account.getName());
         jtxtAcctNo.setText(String.valueOf(account.getAcctNo()));
         jtxtAcctTypeCd.setText(account.getTypeCd());
@@ -684,17 +688,98 @@ public class AccountsView extends FrameView {
     }//GEN-LAST:event_jbtnIntTransActionPerformed
 
     private void jbtnDisplayHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnDisplayHistoryActionPerformed
-
-        statusMessageLabel.setText("display history");
-
+        statusMessageLabel.setText("");
+        
+        ArrayList<String> hist = account.getLog();
+        if(!account.getErrMsg().isEmpty()) {
+            statusMessageLabel.setText(account.getErrMsg());
+            return;
+        }else {
+            statusMessageLabel.setText(account.getActionMsg());
+        }
+        
+        JTextArea t = new JTextArea();
+        for(int i = 0; i < hist.size(); i++) {
+            t.append(hist.get(i) + "\n");
+        }
+        
+        JScrollPane sp = new JScrollPane(t);
+        JDialog dg = new JDialog();
+        dg.add(sp);
+        
+        dg.setTitle(account.getTypeDesc() + " " + account.getAcctNo() + " history.");
+        dg.setBounds(150, 400, 600, 300);
+        dg.setVisible(true);
     }//GEN-LAST:event_jbtnDisplayHistoryActionPerformed
 
     private void jMenuOpenExistingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenExistingActionPerformed
 
-        statusMessageLabel.setText("open existing test");
+        statusMessageLabel.setText("");
+        int acctno = 0;
+        String flnm, typecd;
+        setInputLine(false);
+        
+        JFileChooser f = new JFileChooser("."); // sets starting directory to current directory
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files (*.txt)", "txt");
+        f.setFileFilter(filter);
+        f.setDialogTitle("Select Account File");
+        JDialog dg = new JDialog();
+        
+        int rval = f.showOpenDialog(dg); // return value
+        
+        if(rval == JFileChooser.CANCEL_OPTION) {
+            statusMessageLabel.setText("Open action canceled.");
+            return;
+        }
+        
+        flnm = f.getSelectedFile().getName().toUpperCase();
+        typecd = flnm.substring(0, 2);
+        try {
+            if(flnm.substring(2, 3).equalsIgnoreCase("L")) {
+                acctno = Integer.parseInt(flnm.substring(3).replace(".TXT", ""));
+            } else {
+                acctno = Integer.parseInt(flnm.substring(2).replace(".TXT", ""));
+            }
+            if(acctno <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            statusMessageLabel.setText("Unknown or illegal account number");
+        }
+        
+        switch(typecd) {
+            case Savings.TYPECD:
+                account = new Savings(acctno);
+
+                break;
+            case Checking.TYPECD:
+                account = new Checking(acctno);
+                break;
+//            case MoneyMarket.TYPECD:
+//                account = new MoneyMarket(jtxtAcctNm.gettext(), sbal);
+            default:
+                statusMessageLabel.setText("unknown account type");
+                return;
+        }
+        if(!account.getErrMsg().isEmpty()) {
+            statusMessageLabel.setText(account.getErrMsg());
+        } else {
+            displayValues();
+        }
+        
+        /*
+        for a new 
+        
+        */
+        
+
+
+
+        
+        // IN CLASS ABOVE THIS POINT
+        
+    /*    statusMessageLabel.setText("open existing test");
 
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+    //    FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         chooser.setFileFilter(filter);
         File file = chooser.getSelectedFile();
         //      String fileName = file.getName(); //chooser.getSelectedFile().getName();
@@ -883,4 +968,13 @@ public class AccountsView extends FrameView {
     private int busyIconIndex = 0;
 
     private JDialog aboutBox;
+    
+    private void displayValues() {
+        NumberFormat curr = NumberFormat.getCurrencyInstance();
+        jtxtDisplayName.setText(account.getName());
+        jtxtAcctNo.setText(String.valueOf(account.getAcctNo()));
+        jtxtAcctTypeCd.setText(account.getTypeCd());
+        jtxtAcctTypeDesc.setText(account.getTypeDesc());
+        jtxtBalance.setText(curr.format(account.getBalance()));
+    }
 }

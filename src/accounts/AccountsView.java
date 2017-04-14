@@ -734,11 +734,15 @@ public class AccountsView extends FrameView {
         
         flnm = f.getSelectedFile().getName().toUpperCase();
         typecd = flnm.substring(0, 2);
+        System.out.println("filename = " + typecd);
+        System.out.println("filename = " + flnm);
         try {
             if(flnm.substring(2, 3).equalsIgnoreCase("L")) {
                 acctno = Integer.parseInt(flnm.substring(3).replace(".TXT", ""));
+                System.out.println("account number with L = " + acctno);
             } else {
                 acctno = Integer.parseInt(flnm.substring(2).replace(".TXT", ""));
+                System.out.println("account number without L = " + acctno);
             }
             if(acctno <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
@@ -748,22 +752,25 @@ public class AccountsView extends FrameView {
         switch(typecd) {
             case Savings.TYPECD:
                 account = new Savings(acctno);
-
+                System.out.println("account type is Savings");
+                System.out.println("error message is " + account.getErrMsg());
                 break;
             case Checking.TYPECD:
                 account = new Checking(acctno);
+                System.out.println("account type is Checking");
+                System.out.println("error message is " + account.getErrMsg());
                 break;
 //            case MoneyMarket.TYPECD:
 //                account = new MoneyMarket(jtxtAcctNm.gettext(), sbal);
             default:
                 statusMessageLabel.setText("unknown account type");
                 return;
-        }
+        } /*
         if(!account.getErrMsg().isEmpty()) {
             statusMessageLabel.setText(account.getErrMsg());
-        } else {
+        } else { */
             displayValues();
-        }
+    //    }
         
         /*
         for a new 

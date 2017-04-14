@@ -29,9 +29,24 @@ abstract public class AssetAccount implements Account {
     NumberFormat c = NumberFormat.getCurrencyInstance();
     
     // in class constructor
-    public AssetAccount(String typecd, int acctno) {
+    public AssetAccount(int acctno) {
         // constructor for known account number
         // card.java has code for a constructor that takes an integer acct number
+        errmsg = "";
+        actmsg = "";
+        this.balance = 0;
+        this.AcctNo = acctno;
+        
+        try {
+            BufferedReader in = new BufferedReader(
+                                new FileReader(this.typeCode + this.AcctNo + ".txt"));
+            this.balance = Double.parseDouble(in.readLine());
+            in.close();
+            actmsg = "Account " + acctno + " re-opened.";
+        } catch (Exception e) {
+            errmsg = "Error re-opening account: " + e.getMessage();
+            this.AcctNo = -1;
+        }    
     }
 
     public AssetAccount(int accountNumber, double balance) {
@@ -229,7 +244,11 @@ abstract public class AssetAccount implements Account {
     @Override
     public ArrayList<String> getLog() {        
         
-        ArrayList<String> h = new ArrayList<>();        
+        ArrayList<String> h = new ArrayList<>();   
+        
+    /*    if(this.AcctNo <= 0) {
+            this.errmsg = "Log request on non-active account."
+        } */
         
         h.add("log entry 1");
         h.add("log entry 2");

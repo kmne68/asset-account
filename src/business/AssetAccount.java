@@ -56,6 +56,11 @@ abstract public class AssetAccount implements Account {
                 }
                 this.nm = logList.get(0);
                 this.balance = Double.parseDouble(logList.get(1));
+                
+                
+                for (int i = 0; i < logList.size(); i++) {
+                    System.out.println(i + " " + logList.get(i));
+        }
                 endScan.close();              
                 
             } catch (FileNotFoundException ex) {

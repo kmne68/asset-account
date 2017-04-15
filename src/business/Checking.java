@@ -10,7 +10,7 @@ public class Checking extends AssetAccount {
     public static final String TYPEDESC = "Checking Account";
 
     public Checking(int acctno) {
-        super(acctno);
+        super(Checking.TYPECD, acctno);
     }
     
     public Checking(String nm, double sbal){

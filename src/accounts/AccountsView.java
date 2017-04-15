@@ -751,14 +751,16 @@ public class AccountsView extends FrameView {
         
         switch(typecd) {
             case Savings.TYPECD:
-                account = new Savings(acctno);
+                account = new Savings(Savings.TYPECD, acctno);
                 System.out.println("account type is Savings");
                 System.out.println("error message is " + account.getErrMsg());
+                displayValues();
                 break;
             case Checking.TYPECD:
-                account = new Checking(acctno);
+                account = new Checking(Checking.TYPECD, acctno);
                 System.out.println("account type is Checking");
                 System.out.println("error message is " + account.getErrMsg());
+                displayValues();
                 break;
 //            case MoneyMarket.TYPECD:
 //                account = new MoneyMarket(jtxtAcctNm.gettext(), sbal);
@@ -769,7 +771,7 @@ public class AccountsView extends FrameView {
         if(!account.getErrMsg().isEmpty()) {
             statusMessageLabel.setText(account.getErrMsg());
         } else { */
-            displayValues();
+    //        displayValues();
     //    }
         
         /*

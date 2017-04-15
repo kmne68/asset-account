@@ -6,6 +6,8 @@
 package business;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Scanner;
 
 /**
  *
@@ -28,25 +31,49 @@ abstract public class AssetAccount implements Account {
     private String nm;
     NumberFormat c = NumberFormat.getCurrencyInstance();
     
+    
     // in class constructor
-    public AssetAccount(int acctno) {
+    public AssetAccount(String typecode, int acctno) {
         // constructor for known account number
         // card.java has code for a constructor that takes an integer acct number
         errmsg = "";
         actmsg = "";
         this.balance = 0;
         this.AcctNo = acctno;
+        this.typeCode = typecode;
+        this.nm = "";
         
-        try {
+        ArrayList<String> logList = new ArrayList<>();
+            // accountNumber = fileName.replaceAll("\\D", "");
+            //endBalanceName = fileName;
+            try {
+                Scanner endScan;
+                String scanFile = this.typeCode + this.AcctNo + ".txt";
+                System.out.println("from AssetAccount scanfile = " + scanFile);
+                endScan = new Scanner(new File(scanFile));
+                while (endScan.hasNextLine()) {
+                    logList.add(endScan.nextLine());
+                }
+                this.nm = logList.get(0);
+                this.balance = Double.parseDouble(logList.get(1));
+                endScan.close();              
+                
+            } catch (FileNotFoundException ex) {
+            //    Logger.getLogger(AccountsView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        
+    /*    try {
             BufferedReader in = new BufferedReader(
                                 new FileReader(this.typeCode + this.AcctNo + ".txt"));
             this.balance = Double.parseDouble(in.readLine());
+            System.out.println("balance = " + balance);
             in.close();
             actmsg = "Account " + acctno + " re-opened.";
         } catch (Exception e) {
             errmsg = "Error re-opening account: " + e.getMessage();
             this.AcctNo = -1;
-        }    
+        }    */
     }
 
     public AssetAccount(int accountNumber, double balance) {

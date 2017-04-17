@@ -24,7 +24,7 @@ import java.util.Scanner;
  */
 abstract public class AssetAccount implements Account {
 
-    private int AcctNo;
+    private int AcctNo = 0;
     private double balance;
     private String actmsg, errmsg;
     private String typeCode;
@@ -36,17 +36,20 @@ abstract public class AssetAccount implements Account {
     public AssetAccount(String typecode, int acctno) {
         // constructor for known account number
         // card.java has code for a constructor that takes an integer acct number
+        System.out.println("FROM ASSET ACCOUNT CONSTRUCTOR");
         errmsg = "";
         actmsg = "";
-        this.balance = 0;
-        this.AcctNo = acctno;
+    //    this.balance = 0;
+    //    this.AcctNo = acctno;
         this.typeCode = typecode;
-        this.nm = "";
+    //    this.nm = "";
         
         ArrayList<String> logList = new ArrayList<>();
             // accountNumber = fileName.replaceAll("\\D", "");
             //endBalanceName = fileName;
             try {
+                
+                System.out.println("FROM ASSET ACCOUNT CONSTRUCTOR");
                 Scanner endScan;
                 String scanFile = this.typeCode + this.AcctNo + ".txt";
                 System.out.println("from AssetAccount scanfile = " + scanFile);
@@ -81,17 +84,17 @@ abstract public class AssetAccount implements Account {
         }    */
     }
 
-    public AssetAccount(int accountNumber, double balance) {
+ /*   public AssetAccount(int accountNumber, double balance) {
         this.AcctNo = accountNumber;
         this.balance = balance;
-    }
+    } */
 
     public AssetAccount(String code, String name, double balance) {
 
-        this.AcctNo = 0;
+  //      this.AcctNo = 0;
         this.actmsg = "";
         this.errmsg = "";
-        this.balance = 0;
+   //     this.balance = 0;
         this.typeCode = code;
 
         while (this.AcctNo == 0) {
@@ -276,21 +279,15 @@ abstract public class AssetAccount implements Account {
     @Override
     public ArrayList<String> getLog() {        
         
-        ArrayList<String> h = new ArrayList<>();   
-        
-    /*    if(this.AcctNo <= 0) {
-            this.errmsg = "Log request on non-active account."
-        } */
-        
-        h.add("log entry 1");
-        h.add("log entry 2");
-        h.add("log entry 3");
-        
-        return h;
-    /*    ArrayList<String> h = new ArrayList<>();
+        ArrayList<String> h = new ArrayList<>();        
         errmsg = "";
         actmsg = "";
         String t;
+        
+        if(this.AcctNo <= 0) {
+            this.errmsg = "Log request on non-active account.";
+        }      
+
 
         if (this.AcctNo <= 0) {
             errmsg = "Cannot load information for non-active account.";
@@ -298,8 +295,11 @@ abstract public class AssetAccount implements Account {
         }
 
         try {
+            
+            String filename = this.typeCode + "L" + this.AcctNo + ".txt";
             BufferedReader in = new BufferedReader(
-                    new FileReader(this.typeCode + this.AcctNo + ".txt"));
+                    new FileReader(filename));
+            System.out.println("filename = " + filename);
             t = in.readLine();
 
             while (t != null) {
@@ -311,7 +311,7 @@ abstract public class AssetAccount implements Account {
         } catch (Exception e) {
             errmsg = "Error reading log file: " + e.getMessage();
         }
-        return h; */
+        return h;
     }
 
     @Override

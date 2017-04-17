@@ -606,11 +606,12 @@ public class AccountsView extends FrameView {
         }
         
         // call to display values
-        jtxtDisplayName.setText(account.getName());
+        displayValues();
+/*        jtxtDisplayName.setText(account.getName());
         jtxtAcctNo.setText(String.valueOf(account.getAcctNo()));
         jtxtAcctTypeCd.setText(account.getTypeCd());
         jtxtAcctTypeDesc.setText(account.getTypeDesc());
-        jtxtBalance.setText(curr.format(account.getBalance()));
+        jtxtBalance.setText(curr.format(account.getBalance())); */
 
         setInputLine(false);
         jtxtChgAmt.requestFocusInWindow();
@@ -754,12 +755,15 @@ public class AccountsView extends FrameView {
                 account = new Savings(Savings.TYPECD, acctno);
                 System.out.println("account type is Savings");
                 System.out.println("error message is " + account.getErrMsg());
+                System.out.println("account balance is " + account.getBalance());
                 displayValues();
                 break;
             case Checking.TYPECD:
                 account = new Checking(Checking.TYPECD, acctno);
                 System.out.println("account type is Checking");
                 System.out.println("error message is " + account.getErrMsg());
+                System.out.println("account balance is " + account.getBalance());
+                System.out.println("account number is " + acctno);
                 displayValues();
                 break;
 //            case MoneyMarket.TYPECD:
@@ -773,15 +777,6 @@ public class AccountsView extends FrameView {
         } else { */
     //        displayValues();
     //    }
-        
-        /*
-        for a new 
-        
-        */
-        
-
-
-
         
         // IN CLASS ABOVE THIS POINT
         
